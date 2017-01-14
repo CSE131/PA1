@@ -65,9 +65,10 @@ BOOLEAN   (true|false)
   * %% markers which delimit the Rules section. 
   */ 
 
-[\n]		{currentLineNum++; currentColNum = 1;}
+[\n]    {currentLineNum++; currentColNum = 1;}
 
-void 		        {return T_Void;}
+/* Reserved Keywords */
+void            {return T_Void;}
 int             {return T_Int;}
 float           {return T_Float;}
 bool            {return T_Bool;}
@@ -103,6 +104,29 @@ const           {return T_Const;}
 uniform         {return T_Uniform;}
 struct          {return T_Struct;}
 return          {return T_Return;}
+
+/* Operators */
+(               {return T_LeftParen;}
+)               {return T_RightParen;}
++[0-9]*         //{return T_IntConstant;} // For positive sign
+-[0-9]*         //{return T_IntConstant;} // For negative sign
+*               {return T_Star;}
+/               {return T_Slash;}
++               {return T_Plus;}
+-               {return T_Dash;}
+<               {return T_LeftAngle;}
+>               {return T_RightAngle;}
+<=              {return T_LessEqual;}
+>=              {return T_GreaterEqual;}
+==              {return T_EQ;}
+!=              {return T_NE;}
+&&              {return T_And;}
+||              {return T_Or;}
+=               {return T_Equal;}
+
+++              {return T_Inc;}
+--              {return T_Dec;}
+
 
 //true            {return yylval.boolConstant = 1;}
 //false           {return yylval.boolConstant = 0;}
