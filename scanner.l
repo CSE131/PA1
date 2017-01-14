@@ -67,7 +67,46 @@ BOOLEAN   (true|false)
 
 [\n]		{currentLineNum++; currentColNum = 1;}
 
-void 		{return T_Void;}
+void 		        {return T_Void;}
+int             {return T_Int;}
+float           {return T_Float;}
+bool            {return T_Bool;}
+mat2            {return T_Mat2;}
+mat3            {return T_Mat3;}
+mat4            {return T_Mat4;}
+vec2            {return T_Vec2;}
+vec3            {return T_Vec3;}
+vec4            {return T_Vec4;}
+ivec2           {return T_Ivec2;}
+ivec3           {return T_Ivec3;}
+ivec4           {return T_Ivec4;}
+bvec2           {return T_Bvec2;}
+bvec3           {return T_Bvec3;}
+bvec4           {return T_Bvec4;}
+uint            {return T_Uint;}
+uvec2           {return T_Uvec2;}
+uvec3           {return T_Uvec3;}
+uvec4           {return T_Uvec4;}
+if              {return T_If;}
+else            {return T_Else;}
+in              {return T_In;}
+out             {return T_Out;}
+break           {return T_Break;}
+continue        {return T_Continue;}
+do              {return T_Do;}
+for             {return T_For;}
+while           {return T_While;}
+switch          {return T_Switch;}
+case            {return T_Case;}
+default         {return T_Default;}
+const           {return T_Const;}
+uniform         {return T_Uniform;}
+struct          {return T_Struct;}
+return          {return T_Return;}
+
+//true            {return yylval.boolConstant = 1;}
+//false           {return yylval.boolConstant = 0;}
+
 
 %%
 
