@@ -57,7 +57,10 @@ int currentLineNum, currentColNum;
   * entries in the Rules section later. 
   */
 
-BOOLEAN   (true|false)
+BOOLEAN     (true|false)
+INT         [0-9]+
+FLOAT       [0-9]\.[0-9]
+IDENTIFIER  //TODO
 
 %x ML_COMMENT
 %%             /* BEGIN RULES SECTION */
@@ -66,15 +69,15 @@ BOOLEAN   (true|false)
   */ 
 
 [\n]    {currentLineNum++; currentColNum = 1;}
+[\t]    {currentColNum += (8 - currentColNum % 8);}
 
 /* Reserved Keywords */
 void            {return T_Void;}
-int             {return T_Int;}
-float           {return T_Float;}
 bool            {return T_Bool;}
-mat2            {return T_Mat2;}
-mat3            {return T_Mat3;}
-mat4            {return T_Mat4;}
+float           {return T_Float;}
+int             {return T_Int;}
+uint            {return T_Uint;}
+"unsigned int"  {return T_Uint;}
 vec2            {return T_Vec2;}
 vec3            {return T_Vec3;}
 vec4            {return T_Vec4;}
@@ -84,52 +87,91 @@ ivec4           {return T_Ivec4;}
 bvec2           {return T_Bvec2;}
 bvec3           {return T_Bvec3;}
 bvec4           {return T_Bvec4;}
-uint            {return T_Uint;}
 uvec2           {return T_Uvec2;}
 uvec3           {return T_Uvec3;}
 uvec4           {return T_Uvec4;}
-if              {return T_If;}
-else            {return T_Else;}
+mat2            {return T_Mat2;}
+mat3            {return T_Mat3;}
+mat4            {return T_Mat4;}
+struct          {return T_Struct;}
 in              {return T_In;}
 out             {return T_Out;}
+const           {return T_Const;}
+uniform         {return T_Uniform;}
+while           {return T_While;}
 break           {return T_Break;}
 continue        {return T_Continue;}
 do              {return T_Do;}
+else            {return T_Else;}
 for             {return T_For;}
-while           {return T_While;}
+if              {return T_If;}
+return          {return T_Return;}
 switch          {return T_Switch;}
 case            {return T_Case;}
 default         {return T_Default;}
-const           {return T_Const;}
-uniform         {return T_Uniform;}
-struct          {return T_Struct;}
-return          {return T_Return;}
+
 
 /* Operators */
-(               {return T_LeftParen;}
-)               {return T_RightParen;}
-+[0-9]*         //{return T_IntConstant;} // For positive sign
--[0-9]*         //{return T_IntConstant;} // For negative sign
-*               {return T_Star;}
-/               {return T_Slash;}
-+               {return T_Plus;}
--               {return T_Dash;}
-<               {return T_LeftAngle;}
->               {return T_RightAngle;}
-<=              {return T_LessEqual;}
+++              {return T_Inc;}
+--              {return T_Dec;}
 >=              {return T_GreaterEqual;}
+<=              {return T_LessEqual;}
 ==              {return T_EQ;}
 !=              {return T_NE;}
 &&              {return T_And;}
 ||              {return T_Or;}
+*=              {return T_MulAssign;}
+/=              {return T_DivAssign;}
++=              {return T_AddAssign;}
+-=              {return T_SubAssign;}
+(               {return T_LeftParen;}
+)               {return T_RightParen;}
+[               {return T_LeftBracket;}
+]               {return T_RightBracket;}
+{               {return T_LeftBrace;}
+}               {return T_RightBrace;}
+.               {return T_Dot;}
+:               {return T_Colon;}
 =               {return T_Equal;}
+;               {return T_Semicolon;}
+-               {return T_Dash;}
++               {return T_Plus;}
+*               {return T_Star;}
+/               {return T_Slash;}
+<               {return T_LeftAngle;}
+>               {return T_RightAngle;}
+?               {return T_Question;}
 
-++              {return T_Inc;}
---              {return T_Dec;}
+/* Constants */
+{BOOLEAN}       {
+                    //returns 0 if true
+                    if (yytext.compare("true")){
+                        yylval.boolConstant = false;
+                    }else{
+                        yylval.boolConstant = true;
+                    }
+                    return T_BoolConstant;
+                }
+
+{INT}[uU]       {
+                    yylval.integerConstant = strtol(yytext, NULL, 10);
+                    return T_UintConstant;
+                } //must be matched before signed int
+
+{INT}           {
+                    yylval.integerConstant = strtol(yytext, NULL,10);
+                    return T_IntConstant;
+                }
+
+{FLOAT}         {
+                    yylval.floatConstant = strtod(yytext, NULL);
+                    return T_FloatConstant;
+                }
+
+-[0-9]*         //{return T_IntConstant;} // For negative sign <- TODO
 
 
-//true            {return yylval.boolConstant = 1;}
-//false           {return yylval.boolConstant = 0;}
+
 
 
 %%
