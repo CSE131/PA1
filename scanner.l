@@ -188,7 +188,7 @@ ONELINECOMMENT      \/\/(.*)
 
 -[0-9]*         //{return T_IntConstant;} // For negative sign <- TODO
 
-
+.                  {ReportError::UnrecogChar(&yylloc, yytext[0]);}
 
 
 
