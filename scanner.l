@@ -79,7 +79,7 @@ IDENTIFIER  [A-Za-z_][A-Za-z0-9_]*
 <ML_COMMENT>{ "*"+[^*/\n]*}
 <ML_COMMENT>{ \n    currentLineNum++;
                     currentColNum++;}
-<ML_COMMENT>{ "*"+"/"   BEGIN(INITIAL)}
+<ML_COMMENT>{ "*"+"/"   BEGIN(INITIAL);}
 <ML_COMMENT>{ <<EOF>> ReportError::UntermComment();}
 
 /* Keywords */
