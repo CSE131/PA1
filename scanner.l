@@ -59,8 +59,8 @@ int currentLineNum, currentColNum;
 
 BOOLEAN     (true|false)
 INT         [0-9]+
-FLOAT       [0-9]\.[0-9]
-IDENTIFIER  //TODO
+FLOAT       ([0-9]+)\.([0-9]+)(f)?
+IDENTIFIER  [A-Za-z_][A-Za-z0-9_]*
 
 %x ML_COMMENT
 %%             /* BEGIN RULES SECTION */
@@ -70,6 +70,8 @@ IDENTIFIER  //TODO
 
 [\n]    {currentLineNum++; currentColNum = 1;}
 [\t]    {currentColNum += (8 - currentColNum % 8);}
+[ ]     {}
+
 
 /* Reserved Keywords */
 void            {return T_Void;}
