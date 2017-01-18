@@ -57,10 +57,12 @@ int currentLineNum, currentColNum;
   * entries in the Rules section later. 
   */
 
-BOOLEAN     (true|false)
-INT         [0-9]+
-FLOAT       ([0-9]+)\.([0-9]+)(f)?
-IDENTIFIER  [A-Za-z_][A-Za-z0-9_]*
+BOOLEAN             (true|false)
+INT                 [0-9]+
+FLOAT               ([0-9]+)\.([0-9]+)(f)?
+IDENTIFIER          [A-Za-z_][A-Za-z0-9_]*
+ONELINECOMMENT      \/\/(.*)
+
 
 %x ML_COMMENT
 %%             /* BEGIN RULES SECTION */
@@ -68,90 +70,95 @@ IDENTIFIER  [A-Za-z_][A-Za-z0-9_]*
   * %% markers which delimit the Rules section. 
   */ 
 
-[\n]    {currentLineNum++; currentColNum = 1;}
-[\t]    {currentColNum += (8 - currentColNum % 8);}
-[ ]     {}
+[\n]            {currentLineNum++; currentColNum = 1;}
+[\t]            {currentColNum += (8 - currentColNum % 8);}
+[" "]           {}
 
 /* Skipping over comments */
-//(.*)          { }
-/*              BEGIN(ML_COMMENT);
-<ML_COMMENT>{ [^*\n]*}
-<ML_COMMENT>{ "*"+[^*/\n]*}
-<ML_COMMENT>{ \n    currentLineNum++;
-                    currentColNum++;}
-<ML_COMMENT>{ "*"+"/"   BEGIN(INITIAL);}
-<ML_COMMENT>{ <<EOF>> ReportError::UntermComment();}
+{ONELINECOMMENT}            { }
+"/*"                        BEGIN(ML_COMMENT);
+<ML_COMMENT>[^*\n]*         {}
+<ML_COMMENT>"*"+[^*/\n]*    {}
+<ML_COMMENT>\n              {currentLineNum++;}
+<ML_COMMENT><<EOF>>         {
+                                //what up the comment doesn't end?
+                                ReportError::UntermComment();
+                                return 0;
+                            }
+<ML_COMMENT>"*"+"/"         BEGIN(INITIAL);
+
+
 
 /* Keywords */
-void            {return T_Void;}
-bool            {return T_Bool;}
-float           {return T_Float;}
-int             {return T_Int;}
-uint            {return T_Uint;}
-"unsigned int"  {return T_Uint;}
-vec2            {return T_Vec2;}
-vec3            {return T_Vec3;}
-vec4            {return T_Vec4;}
-ivec2           {return T_Ivec2;}
-ivec3           {return T_Ivec3;}
-ivec4           {return T_Ivec4;}
-bvec2           {return T_Bvec2;}
-bvec3           {return T_Bvec3;}
-bvec4           {return T_Bvec4;}
-uvec2           {return T_Uvec2;}
-uvec3           {return T_Uvec3;}
-uvec4           {return T_Uvec4;}
-mat2            {return T_Mat2;}
-mat3            {return T_Mat3;}
-mat4            {return T_Mat4;}
-struct          {return T_Struct;}
-in              {return T_In;}
-out             {return T_Out;}
-const           {return T_Const;}
-uniform         {return T_Uniform;}
-while           {return T_While;}
-break           {return T_Break;}
-continue        {return T_Continue;}
-do              {return T_Do;}
-else            {return T_Else;}
-for             {return T_For;}
-if              {return T_If;}
-return          {return T_Return;}
-switch          {return T_Switch;}
-case            {return T_Case;}
-default         {return T_Default;}
+"void"              {return T_Void;}
+"bool"              {return T_Bool;}
+"float"             {return T_Float;}
+"int"               {return T_Int;}
+"uint"              {return T_Uint;}
+"unsigned int"      {return T_Uint;}
+"vec2"              {return T_Vec2;}
+"vec3"              {return T_Vec3;}
+"vec4"              {return T_Vec4;}
+"ivec2"             {return T_Ivec2;}
+"ivec3"             {return T_Ivec3;}
+"ivec4"             {return T_Ivec4;}
+"bvec2"             {return T_Bvec2;}
+"bvec3"             {return T_Bvec3;}
+"bvec4"             {return T_Bvec4;}
+"uvec2"             {return T_Uvec2;}
+"uvec3"             {return T_Uvec3;}
+"uvec4"             {return T_Uvec4;}
+"mat2"              {return T_Mat2;}
+"mat3"              {return T_Mat3;}
+"mat4"              {return T_Mat4;}
+"struct"            {return T_Struct;}
+"in"                {return T_In;}
+"out"               {return T_Out;}
+"const"             {return T_Const;}
+"uniform"           {return T_Uniform;}
+"while"             {return T_While;}
+"break"             {return T_Break;}
+"continue"          {return T_Continue;}
+"do"                {return T_Do;}
+"else"              {return T_Else;}
+"for"               {return T_For;}
+"if"                {return T_If;}
+"return"            {return T_Return;}
+"switch"            {return T_Switch;}
+"case"              {return T_Case;}
+"default"           {return T_Default;}
 
 
 /* Operators */
-++              {return T_Inc;}
---              {return T_Dec;}
->=              {return T_GreaterEqual;}
-<=              {return T_LessEqual;}
-==              {return T_EQ;}
-!=              {return T_NE;}
-&&              {return T_And;}
-||              {return T_Or;}
-*=              {return T_MulAssign;}
-/=              {return T_DivAssign;}
-+=              {return T_AddAssign;}
--=              {return T_SubAssign;}
-(               {return T_LeftParen;}
-)               {return T_RightParen;}
-[               {return T_LeftBracket;}
-]               {return T_RightBracket;}
-{               {return T_LeftBrace;}
-}               {return T_RightBrace;}
-.               {return T_Dot;}
-:               {return T_Colon;}
-=               {return T_Equal;}
-;               {return T_Semicolon;}
--               {return T_Dash;}
-+               {return T_Plus;}
-*               {return T_Star;}
-/               {return T_Slash;}
-<               {return T_LeftAngle;}
->               {return T_RightAngle;}
-?               {return T_Question;}
+"++"                {return T_Inc;}
+"--"                {return T_Dec;}
+">="                {return T_GreaterEqual;}
+"<="                {return T_LessEqual;}
+"=="                {return T_EQ;}
+"!="                {return T_NE;}
+"&&"                {return T_And;}
+"||"                {return T_Or;}
+"*="                {return T_MulAssign;}
+"/="                {return T_DivAssign;}
+"+="                {return T_AddAssign;}
+"-="                {return T_SubAssign;}
+"("                 {return T_LeftParen;}
+")"                 {return T_RightParen;}
+"["                 {return T_LeftBracket;}
+"]"                 {return T_RightBracket;}
+"{"                 {return T_LeftBrace;}
+"}"                 {return T_RightBrace;}
+"."                 {return T_Dot;}
+":"                 {return T_Colon;}
+"="                 {return T_Equal;}
+";"                 {return T_Semicolon;}
+"-"                 {return T_Dash;}
+"+"                 {return T_Plus;}
+"*"                 {return T_Star;}
+"/"                 {return T_Slash;}
+"<"                 {return T_LeftAngle;}
+">"                 {return T_RightAngle;}
+"?"                 {return T_Question;}
 
 /* Constants */
 {BOOLEAN}       {
