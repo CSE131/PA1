@@ -72,8 +72,17 @@ IDENTIFIER  [A-Za-z_][A-Za-z0-9_]*
 [\t]    {currentColNum += (8 - currentColNum % 8);}
 [ ]     {}
 
+/* Skipping over comments */
+//(.*)          { }
+/*              BEGIN(ML_COMMENT);
+<ML_COMMENT>{ [^*\n]*}
+<ML_COMMENT>{ "*"+[^*/\n]*}
+<ML_COMMENT>{ \n    currentLineNum++;
+                    currentColNum++;}
+<ML_COMMENT>{ "*"+"/"   BEGIN(INITIAL)}
+<ML_COMMENT>{ <<EOF>> ReportError::UntermComment();}
 
-/* Reserved Keywords */
+/* Keywords */
 void            {return T_Void;}
 bool            {return T_Bool;}
 float           {return T_Float;}
