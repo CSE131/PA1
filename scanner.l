@@ -91,7 +91,7 @@ ONELINECOMMENT      (\/\/([^\n]*))
                             }
 <ML_COMMENT>"*"+"/"         BEGIN(INITIAL);
 
-<FIELDSELECT>{IDENTIFIER}    {
+<FIELDSELECT>{IDENTIFIER}   {
                                 strncpy(yylval.identifier, yytext, MaxIdentLen);
                                 if (yyleng > 1023){
                                      ReportError::LongIdentifier(&yylloc, yytext);
@@ -100,6 +100,7 @@ ONELINECOMMENT      (\/\/([^\n]*))
                                 return T_FieldSelection;
                                 
                             }
+<FIELDSELECT>.              {BEGIN(INITIAL);}
 
 "void"              {return T_Void;}
 "bool"              {return T_Bool;}
