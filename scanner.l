@@ -58,28 +58,34 @@ int currentLineNum, currentColNum;
   */
 
 BOOLEAN             (true|false)
-INT                 [0-9]+
-FLOAT               ([0-9]+)\.([0-9]+)(f)?
+INT                 ([0-9]+)
+EXP                 ([Ee][-+]?{INT})
+FLOAT               (({INT}\.{INT}{EXP}?[Ff]?) | ({INT}{EXP}[Ff]?))
 IDENTIFIER          [A-Za-z_][A-Za-z0-9_]*
-ONELINECOMMENT      \/\/(.*)
+ONELINECOMMENT      \/\/([^\n]*)
 
 
 %x ML_COMMENT
+%s FIELDSELECT
 %%             /* BEGIN RULES SECTION */
  /* All patterns and actions should be placed between the start and stop
   * %% markers which delimit the Rules section. 
   */ 
 
-[\n]            {currentLineNum++; currentColNum = 1;}
-[\t]            {currentColNum += (8 - currentColNum % 8);}
-[" "]           {}
+[\n]                {currentLineNum++; currentColNum = 1;}
+[\t]                {currentColNum += (8 - currentColNum % 8);}
+" "                 {currentColNum += 1;}
+
+
 
 /* Skipping over comments */
 {ONELINECOMMENT}            { }
+
 "/*"                        BEGIN(ML_COMMENT);
 <ML_COMMENT>[^*\n]*         {}
 <ML_COMMENT>"*"+[^*/\n]*    {}
-<ML_COMMENT>\n              {currentLineNum++;}
+<ML_COMMENT>\n              {currentLineNum++; currentColNum = 1;}
+<ML_COMMENT>\t              {currentColNum += (8 - currentColNum % 8);}
 <ML_COMMENT><<EOF>>         {
                                 //what up the comment doesn't end?
                                 ReportError::UntermComment();
@@ -87,7 +93,15 @@ ONELINECOMMENT      \/\/(.*)
                             }
 <ML_COMMENT>"*"+"/"         BEGIN(INITIAL);
 
-
+<FIELDSELECT>{IDENTIFER}    {
+                                strncpy(yylval.identifier, yytext, MaxIdentLen);
+                                if (yyleng > 1023){
+                                     ReportError::LongIdentifier(&yylloc, yytext);
+                                }
+                                BEGIN(INITIAL);
+                                return T_FieldSelection;
+                                
+                            }
 
 /* Keywords */
 "void"              {return T_Void;}
@@ -148,7 +162,10 @@ ONELINECOMMENT      \/\/(.*)
 "]"                 {return T_RightBracket;}
 "{"                 {return T_LeftBrace;}
 "}"                 {return T_RightBrace;}
-"."                 {return T_Dot;}
+"."                 {
+                        BEGIN(FIELDSELECT);
+                        return T_Dot;
+                    }
 ":"                 {return T_Colon;}
 "="                 {return T_Equal;}
 ";"                 {return T_Semicolon;}
@@ -162,12 +179,7 @@ ONELINECOMMENT      \/\/(.*)
 
 /* Constants */
 {BOOLEAN}       {
-                    //returns 0 if true
-                    if (yytext.compare("true")){
-                        yylval.boolConstant = false;
-                    }else{
-                        yylval.boolConstant = true;
-                    }
+                    yylval.boolConstant = (yytext[0] == 't');
                     return T_BoolConstant;
                 }
 
@@ -186,10 +198,17 @@ ONELINECOMMENT      \/\/(.*)
                     return T_FloatConstant;
                 }
 
--[0-9]*         //{return T_IntConstant;} // For negative sign <- TODO
+{IDENTIFIER}    {
+                    strncpy(yylval.identifier, yytext, MaxIdentLen);
+                    if (yyleng > 1023){
+                        ReportError::LongIdentifier(&yylloc, yytext);
+                    }
+                    return T_Identifier;
+                }
+
 
 /* Any other characters not defined above are unrecognized */
-.                   {ReportError::UnrecogChar(&yylloc, yytext[0]);}}
+.               {ReportError::UnrecogChar(&yylloc, yytext[0]);}
 
 
 
