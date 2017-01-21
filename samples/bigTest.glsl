@@ -35,7 +35,7 @@ _abc
 1e0
 e12345
 true false 
-ivec22.2
+ivec2 2.2
 342.342342u
 3423423U
 a.a
