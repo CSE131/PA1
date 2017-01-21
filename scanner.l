@@ -139,7 +139,6 @@ ONELINECOMMENT      (\/\/([^\n]*))
     return T_FieldSelection;
     
 }
-<FIELDSELECT>.              {BEGIN(INITIAL);}
 
 
 "++"                {return T_Inc;}
