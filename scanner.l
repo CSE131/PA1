@@ -130,6 +130,17 @@ ONELINECOMMENT      (\/\/([^\n]*))
 "case"              {return T_Case;}
 "default"           {return T_Default;}
 
+<FIELDSELECT>{IDENTIFIER}   {
+    strncpy(yylval.identifier, yytext, MaxIdentLen);
+    if (yyleng > 1023){
+        ReportError::LongIdentifier(&yylloc, yytext);
+    }
+    BEGIN(INITIAL);
+    return T_FieldSelection;
+    
+}
+<FIELDSELECT>.              {BEGIN(INITIAL);}
+
 
 "++"                {return T_Inc;}
 "--"                {return T_Dec;}
@@ -165,17 +176,6 @@ ONELINECOMMENT      (\/\/([^\n]*))
 "?"                 {return T_Question;}
 
 
-<FIELDSELECT>{IDENTIFIER}   {
-                                strncpy(yylval.identifier, yytext, MaxIdentLen);
-                                if (yyleng > 1023){
-                                    ReportError::LongIdentifier(&yylloc, yytext);
-                                }
-                                BEGIN(INITIAL);
-                                return T_FieldSelection;
-    
-                            }
-<FIELDSELECT>.              {BEGIN(INITIAL);}
-
 
 {BOOLEAN}       {
                     yylval.boolConstant = (yytext[0] == 't');
@@ -191,8 +191,6 @@ ONELINECOMMENT      (\/\/([^\n]*))
                     yylval.integerConstant = strtol(yytext, NULL,10);
                     return T_IntConstant;
                 }
-
-
 
 
 {FLOAT}         {
