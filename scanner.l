@@ -91,6 +91,15 @@ ONELINECOMMENT      (\/\/([^\n]*))
                             }
 <ML_COMMENT>"*"+"/"         BEGIN(INITIAL);
 
+<FIELDSELECT>{IDENTIFIER}   {
+    strncpy(yylval.identifier, yytext, MaxIdentLen);
+    if (yyleng > 1023){
+        ReportError::LongIdentifier(&yylloc, yytext);
+    }
+    BEGIN(INITIAL);
+    return T_FieldSelection;
+    
+}
 
 "void"              {return T_Void;}
 "bool"              {return T_Bool;}
@@ -129,16 +138,6 @@ ONELINECOMMENT      (\/\/([^\n]*))
 "switch"            {return T_Switch;}
 "case"              {return T_Case;}
 "default"           {return T_Default;}
-
-<FIELDSELECT>{IDENTIFIER}   {
-    strncpy(yylval.identifier, yytext, MaxIdentLen);
-    if (yyleng > 1023){
-        ReportError::LongIdentifier(&yylloc, yytext);
-    }
-    BEGIN(INITIAL);
-    return T_FieldSelection;
-    
-}
 
 
 "++"                {return T_Inc;}
