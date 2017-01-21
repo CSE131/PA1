@@ -61,3 +61,4 @@ mat4
 struct
 .ivec2
 ivec2.
+0u
