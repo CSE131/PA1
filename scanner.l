@@ -60,9 +60,9 @@ int currentLineNum, currentColNum;
 BOOLEAN             (true|false)
 INT                 ([0-9]+)
 EXP                 ([Ee][-+]?{INT})
-FLOAT               (({INT}\.{INT}{EXP}?[Ff]?) | ({INT}{EXP}[Ff]?))
-IDENTIFIER          [A-Za-z_][A-Za-z0-9_]*
-ONELINECOMMENT      \/\/([^\n]*)
+FLOAT               (({INT}\.{INT}{EXP}?[Ff]?)|({INT}{EXP}[Ff]?))
+IDENTIFIER          ([A-Za-z_][A-Za-z0-9_]*)
+ONELINECOMMENT      (\/\/([^\n]*))
 
 
 %x ML_COMMENT
@@ -78,7 +78,6 @@ ONELINECOMMENT      \/\/([^\n]*)
 
 
 
-/* Skipping over comments */
 {ONELINECOMMENT}            { }
 
 "/*"                        BEGIN(ML_COMMENT);
@@ -87,13 +86,12 @@ ONELINECOMMENT      \/\/([^\n]*)
 <ML_COMMENT>\n              {currentLineNum++; currentColNum = 1;}
 <ML_COMMENT>\t              {currentColNum += (8 - currentColNum % 8);}
 <ML_COMMENT><<EOF>>         {
-                                //what up the comment doesn't end?
                                 ReportError::UntermComment();
                                 return 0;
                             }
 <ML_COMMENT>"*"+"/"         BEGIN(INITIAL);
 
-<FIELDSELECT>{IDENTIFER}    {
+<FIELDSELECT>{IDENTIFIER}    {
                                 strncpy(yylval.identifier, yytext, MaxIdentLen);
                                 if (yyleng > 1023){
                                      ReportError::LongIdentifier(&yylloc, yytext);
@@ -103,7 +101,6 @@ ONELINECOMMENT      \/\/([^\n]*)
                                 
                             }
 
-/* Keywords */
 "void"              {return T_Void;}
 "bool"              {return T_Bool;}
 "float"             {return T_Float;}
@@ -143,7 +140,6 @@ ONELINECOMMENT      \/\/([^\n]*)
 "default"           {return T_Default;}
 
 
-/* Operators */
 "++"                {return T_Inc;}
 "--"                {return T_Dec;}
 ">="                {return T_GreaterEqual;}
@@ -177,7 +173,7 @@ ONELINECOMMENT      \/\/([^\n]*)
 ">"                 {return T_RightAngle;}
 "?"                 {return T_Question;}
 
-/* Constants */
+
 {BOOLEAN}       {
                     yylval.boolConstant = (yytext[0] == 't');
                     return T_BoolConstant;
@@ -186,12 +182,15 @@ ONELINECOMMENT      \/\/([^\n]*)
 {INT}[uU]       {
                     yylval.integerConstant = strtol(yytext, NULL, 10);
                     return T_UintConstant;
-                } //must be matched before signed int
+                }
 
 {INT}           {
                     yylval.integerConstant = strtol(yytext, NULL,10);
                     return T_IntConstant;
                 }
+
+
+
 
 {FLOAT}         {
                     yylval.floatConstant = strtod(yytext, NULL);
@@ -207,7 +206,6 @@ ONELINECOMMENT      \/\/([^\n]*)
                 }
 
 
-/* Any other characters not defined above are unrecognized */
 .               {ReportError::UnrecogChar(&yylloc, yytext[0]);}
 
 
