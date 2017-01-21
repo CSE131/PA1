@@ -25,7 +25,6 @@ vec2 vec2 vec2
 123.
 0.12345f
 0.123F
-.123
 -123
 123u
 123.12345Ula
@@ -36,7 +35,7 @@ _abc
 1e0
 e12345
 true false 
-ivec2.2
+ivec22.2
 342.342342u
 3423423U
 a.a
@@ -60,3 +59,6 @@ mat2
 mat3
 mat4
 struct
+a.3
+.ivec2
+ivec2.
