@@ -74,7 +74,7 @@ ONELINECOMMENT      (\/\/([^\n]*))
 
 [\n]                {currentLineNum++; currentColNum = 1;}
 [\t]                {currentColNum += (8 - currentColNum % 8);}
-" "                 {currentColNum += 1;}
+" "                 {}
 
 
 
