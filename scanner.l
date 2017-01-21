@@ -83,8 +83,8 @@ ONELINECOMMENT      (\/\/([^\n]*))
 "/*"                        BEGIN(ML_COMMENT);
 <ML_COMMENT>[^*\n]*         {}
 <ML_COMMENT>"*"+[^*/\n]*    {}
-<ML_COMMENT>\n              {currentLineNum++; currentColNum = 1;}
-<ML_COMMENT>\t              {currentColNum += (8 - currentColNum % 8);}
+<ML_COMMENT>[\n]              {currentLineNum++; currentColNum = 1;}
+<ML_COMMENT>[\t]+              {currentColNum += (8 - currentColNum % 8);}
 <ML_COMMENT><<EOF>>         {
                                 ReportError::UntermComment();
                                 return 0;
