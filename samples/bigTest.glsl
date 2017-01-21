@@ -59,6 +59,5 @@ mat2
 mat3
 mat4
 struct
-a.3
 .ivec2
 ivec2.
