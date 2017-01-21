@@ -91,16 +91,6 @@ ONELINECOMMENT      (\/\/([^\n]*))
                             }
 <ML_COMMENT>"*"+"/"         BEGIN(INITIAL);
 
-<FIELDSELECT>{IDENTIFIER}   {
-                                strncpy(yylval.identifier, yytext, MaxIdentLen);
-                                if (yyleng > 1023){
-                                     ReportError::LongIdentifier(&yylloc, yytext);
-                                }
-                                BEGIN(INITIAL);
-                                return T_FieldSelection;
-                                
-                            }
-<FIELDSELECT>.              {BEGIN(INITIAL);}
 
 "void"              {return T_Void;}
 "bool"              {return T_Bool;}
@@ -175,6 +165,18 @@ ONELINECOMMENT      (\/\/([^\n]*))
 "?"                 {return T_Question;}
 
 
+<FIELDSELECT>{IDENTIFIER}   {
+                                strncpy(yylval.identifier, yytext, MaxIdentLen);
+                                if (yyleng > 1023){
+                                    ReportError::LongIdentifier(&yylloc, yytext);
+                                }
+                                BEGIN(INITIAL);
+                                return T_FieldSelection;
+    
+                            }
+<FIELDSELECT>.              {BEGIN(INITIAL);}
+
+
 {BOOLEAN}       {
                     yylval.boolConstant = (yytext[0] == 't');
                     return T_BoolConstant;
@@ -197,6 +199,7 @@ ONELINECOMMENT      (\/\/([^\n]*))
                     yylval.floatConstant = strtod(yytext, NULL);
                     return T_FloatConstant;
                 }
+
 
 {IDENTIFIER}    {
                     strncpy(yylval.identifier, yytext, MaxIdentLen);
