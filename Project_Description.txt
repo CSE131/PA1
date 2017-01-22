@@ -1,0 +1,14 @@
+In project 1, we approached each token separately. Project 1 is mainly working on the 
+lexical analysis of what is parsed. We went in order of importance, starting with 
+comments and multi-lined comments. After we implemented the comments tokens, we imeplented each 
+keyword as the next step of order. Since the keywords are not identifiers and are used differently,
+they were needed to be at the top. We returned each keyword to the appropriate return token from
+scanner.h. After the keywords, we put the operators and symbols next. The math and logical operators
+are needed after. With the Booleans and numbers, we implemented a definition for the booleans, integers,
+floats, and identifier. First we ordered the field selection next as it will take in an input
+from the dot operator. The field selector was intentionally placed after the keywords so that the
+keywords take precedence over the identifiers. The dot character will initialize a set of rules for the field selection, 
+making the rules look for an identifier and record its data. With both the identifier and field selection
+we check how many characters are set and if it is larger than 31, we truncate it to 31 and if it 
+is larger than 1023, then we give a long identifier error. With the booleans, numbers, and identifiers
+we record the data to keep for reference. The white spaces and tabs also record the column and line numbers.
