@@ -59,7 +59,7 @@ int currentLineNum, currentColNum;
 
 BOOLEAN             (true|false)
 INT                 ([0-9]+)
-UINT                ({INT}[uU])
+UINT                ([1-9]+[0-9]*[uU])
 EXP                 ([Ee][-+]?{INT})
 FLOAT               (({INT}\.{INT}{EXP}?[Ff]?)|({INT}{EXP}[Ff]?))
 IDENTIFIER          ([A-Za-z_][A-Za-z0-9_]*)
