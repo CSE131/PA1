@@ -1,6 +1,6 @@
 #!/bin/bash
 
-name=“(Gurkirat Singh) (Tony Xu)”
+name=“Gurkirat Singh _ Tony Xu”
 pid=“A11593827_A10447459”
 email=“gus011@ucsd.edu”
 
