@@ -66,6 +66,5 @@ ivec2.
 01
 01u
 1u
-0134234Uu
 134234Uu
 variable.ivec3
