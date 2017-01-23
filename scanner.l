@@ -59,6 +59,7 @@ int currentLineNum, currentColNum;
 
 BOOLEAN             (true|false)
 INT                 ([0-9]+)
+UINT                ({INT}[uU])
 EXP                 ([Ee][-+]?{INT})
 FLOAT               (({INT}\.{INT}{EXP}?[Ff]?)|({INT}{EXP}[Ff]?))
 IDENTIFIER          ([A-Za-z_][A-Za-z0-9_]*)
@@ -130,16 +131,6 @@ ONELINECOMMENT      (\/\/([^\n]*))
 "case"              {return T_Case;}
 "default"           {return T_Default;}
 
-<FIELDSELECT>{IDENTIFIER}   {
-                                strncpy(yylval.identifier, yytext, MaxIdentLen);
-                                if (yyleng > 1023){
-                                    ReportError::LongIdentifier(&yylloc, yytext);
-                                }
-                                BEGIN(INITIAL);
-                                return T_FieldSelection;
-    
-                            }
-
 
 "++"                {return T_Inc;}
 "--"                {return T_Dec;}
@@ -181,21 +172,31 @@ ONELINECOMMENT      (\/\/([^\n]*))
                     return T_BoolConstant;
                 }
 
-{INT}[uU]       {
-                    yylval.integerConstant = strtol(yytext, NULL, 10);
-                    return T_UintConstant;
-                }
-
 {INT}           {
                     yylval.integerConstant = strtol(yytext, NULL,10);
                     return T_IntConstant;
                 }
 
+{UINT}          {
+                    yylval.integerConstant = strtol(yytext, NULL, 10);
+                    return T_UintConstant;
+                }
 
 {FLOAT}         {
                     yylval.floatConstant = strtod(yytext, NULL);
                     return T_FloatConstant;
                 }
+
+
+<FIELDSELECT>{IDENTIFIER}   {
+                                strncpy(yylval.identifier, yytext, MaxIdentLen);
+                                if (yyleng > 1023){
+                                    ReportError::LongIdentifier(&yylloc, yytext);
+                                }
+                                BEGIN(INITIAL);
+                                return T_FieldSelection;
+    
+                            }
 
 
 {IDENTIFIER}    {

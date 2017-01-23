@@ -62,3 +62,8 @@ struct
 .ivec2
 ivec2.
 0u
+00
+01
+01u
+0134234Uu
+134234Uu
