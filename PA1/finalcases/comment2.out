@@ -1,0 +1,4 @@
+abc          line 1 cols 1-3 is T_Identifier (value = abc)
+xyz          line 1 cols 27-29 is T_Identifier (value = xyz)
+abc          line 2 cols 1-3 is T_Identifier (value = abc)
+xyz          line 3 cols 9-11 is T_Identifier (value = xyz)

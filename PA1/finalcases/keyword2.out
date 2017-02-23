@@ -1,0 +1,16 @@
+mat2         line 1 cols 1-4 is T_Mat2 
+mat3         line 1 cols 6-9 is T_Mat3 
+mat4         line 1 cols 11-14 is T_Mat4 
+vec2         line 1 cols 16-19 is T_Vec2 
+vec3         line 1 cols 21-24 is T_Vec3 
+vec4         line 1 cols 26-29 is T_Vec4 
+ivec2        line 1 cols 31-35 is T_Ivec2 
+ivec3        line 1 cols 37-41 is T_Ivec3 
+ivec4        line 1 cols 43-47 is T_Ivec4 
+bvec2        line 1 cols 49-53 is T_Bvec2 
+bvec3        line 1 cols 55-59 is T_Bvec3 
+bvec4        line 1 cols 61-65 is T_Bvec4 
+uint         line 1 cols 67-70 is T_Uint 
+uvec2        line 1 cols 72-76 is T_Uvec2 
+uvec3        line 1 cols 78-82 is T_Uvec3 
+uvec4        line 1 cols 84-88 is T_Uvec4 

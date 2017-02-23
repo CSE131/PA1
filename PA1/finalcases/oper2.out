@@ -1,0 +1,6 @@
+++           line 1 cols 1-2 is T_Inc 
+--           line 1 cols 4-5 is T_Dec 
+*=           line 1 cols 7-8 is T_MulAssign 
+/=           line 1 cols 10-11 is T_DivAssign 
++=           line 1 cols 13-14 is T_AddAssign 
+-=           line 1 cols 16-17 is T_SubAssign 

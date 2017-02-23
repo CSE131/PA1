@@ -1,0 +1,4 @@
+TRUE         line 1 cols 1-4 is T_Identifier (value = TRUE)
+FALSE        line 1 cols 6-10 is T_Identifier (value = FALSE)
+True         line 1 cols 12-15 is T_Identifier (value = True)
+False        line 1 cols 17-21 is T_Identifier (value = False)

@@ -1,0 +1,10 @@
+10           line 1 cols 1-2 is T_IntConstant (value = 10)
+-            line 1 cols 4-4 is T_Dash 
+10           line 1 cols 5-6 is T_IntConstant (value = 10)
++            line 1 cols 8-8 is T_Plus 
+10           line 1 cols 9-10 is T_IntConstant (value = 10)
+10u          line 1 cols 12-14 is T_UintConstant (value = 10)
+-            line 1 cols 16-16 is T_Dash 
+10u          line 1 cols 17-19 is T_UintConstant (value = 10)
++            line 1 cols 21-21 is T_Plus 
+10u          line 1 cols 22-24 is T_UintConstant (value = 10)

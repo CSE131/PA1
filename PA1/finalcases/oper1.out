@@ -1,0 +1,15 @@
++            line 1 cols 1-1 is T_Plus 
+-            line 1 cols 3-3 is T_Dash 
+*            line 1 cols 5-5 is T_Star 
+/            line 1 cols 7-7 is T_Slash 
+<            line 1 cols 9-9 is T_LeftAngle 
+>            line 1 cols 11-11 is T_RightAngle 
+=            line 1 cols 13-13 is T_Equal 
+(            line 1 cols 15-15 is T_LeftParen 
+)            line 1 cols 17-17 is T_RightParen 
+;            line 1 cols 19-19 is T_Semicolon 
+.            line 1 cols 21-21 is T_Dot 
+[            line 1 cols 23-23 is T_LeftBracket 
+]            line 1 cols 25-25 is T_RightBracket 
+{            line 1 cols 27-27 is T_LeftBrace 
+}            line 1 cols 29-29 is T_RightBrace 

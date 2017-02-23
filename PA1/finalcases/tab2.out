@@ -1,0 +1,2 @@
+abcdefg      line 1 cols 1-7 is T_Identifier (value = abcdefg)
+h            line 1 cols 9-9 is T_Identifier (value = h)
